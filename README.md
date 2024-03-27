@@ -1,1 +1,3 @@
-initial 
+#### Embedded systems learning
+
+- [lcd control](./lcd/)
