@@ -5,3 +5,4 @@
 - [constant pwm](./constant_pwm)
 - [timing a timer](./playing_with_timers_1/)
 - [non blocking blink](./non_blocking_blink/)
+- [frequency measurement](./frequency_measurement_with_timers/)
