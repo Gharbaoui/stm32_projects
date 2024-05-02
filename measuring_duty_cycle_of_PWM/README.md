@@ -6,7 +6,8 @@ is high compared to low, for example let's say that we have with period of 100us
 ![](./pics/pwm.gif)
 
 the idea here is to measure duty cycle what do we need to measure duty cycle, we need to see
-how much the signal is high compared to low, we could use input capture mode, like I did in this one [frequency measurement](./frequency_measurement_with_timers/), so the idea is to set 
+how much the signal is high compared to low, we could use input capture mode, like I did in this one
+[frequency measurement](./frequency_measurement_with_timers/), so the idea is to set 
 interrupt on rising edge but with that we can only get period, I will add another interrupt that
 will be triggered on the falling edge in this example I'll get first rising edge interrupt save
 value of the timer at that point, then I'll get falling edge interrupt save a second value of the
@@ -14,6 +15,7 @@ timer that would give me how much time the signal is high but that would only gi
 so we will wait more for the next rising edge and register that as third value, we can use this
 third value with the first value to get period and now we have period and width I can use them to
 get duty cycle, let's say that I have 1Mhz timer aka it's increasing at rate of 1us=1000ns
+![](./pics/timer.gif)
 
 so for example we get interrupt at rising edge of PWM signal we save the value of the timer at
 that point let's say it's 9, after 25us we get another falling edge interrupt the timer will be
