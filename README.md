@@ -7,3 +7,4 @@
 - [non blocking blink](./non_blocking_blink/)
 - [frequency measurement](./frequency_measurement_with_timers/)
 - [duty cycle measurement](./measuring_duty_cycle_of_PWM/)
+- [signle conversion mode](./single_conversion_adc/)
