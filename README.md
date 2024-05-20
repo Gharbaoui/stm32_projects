@@ -9,3 +9,4 @@
 - [duty cycle measurement](./measuring_duty_cycle_of_PWM/)
 - [signle conversion mode](./single_conversion_adc/)
 - [continuous conversion mode](./continuous_conversion_adc/)
+- [ADC with Interrupts](./adc_with_interrupts/)
