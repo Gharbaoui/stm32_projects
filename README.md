@@ -10,3 +10,4 @@
 - [signle conversion mode](./single_conversion_adc/)
 - [continuous conversion mode](./continuous_conversion_adc/)
 - [ADC with Interrupts](./adc_with_interrupts/)
+- [ADC with DMA](./adc_with_dma/)

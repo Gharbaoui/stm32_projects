@@ -26,7 +26,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc){
 ### Result
 ![](./pics/3.png)
 
-the question now is good approach to do this `interrupt stuff`, well as you can see I'm getting 
+the question now is it good approach to do this `interrupt stuff`, well as you can see I'm getting 
 a lot of interrupts usually that's bad sign because the way that I think of interrupts is like 
 fire and forget system, usually not this fast, we are doing interrupts to make the cpu free, so
 it (cpu) can do something else, but now what the cpu is doing is just trying to execute some 
