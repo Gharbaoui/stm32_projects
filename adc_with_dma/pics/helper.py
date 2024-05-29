@@ -1,4 +1,5 @@
 from manim import *
+from random import randint
 
 class AdcInterrupts(Scene):
     def construct(self):
@@ -78,3 +79,107 @@ class AdcInterrupts(Scene):
             dma_request_animation(.2, .1, work_rate, 10)
         
         self.wait()
+
+class DMAContinuousRequests(Scene):
+    def construct(self):
+        # constants
+        dma_buffer_size = 6
+        # sensor
+        sensor_shape = Square(side_length=1.5, color=WHITE, fill_color=[GREY,WHITE], fill_opacity=.8)
+        sensor_title = Text('sensor').scale(.5)
+        sensor = VGroup(sensor_shape, sensor_title).to_edge(LEFT, buff=.5)
+
+        # adc
+        adc_color=[BLUE, PURPLE]
+        adc_shape = Square(side_length=1.5, color=BLUE, fill_color=adc_color, fill_opacity=.8)
+        adc_title = Text('ADC').scale(.5)
+        adc = VGroup(adc_shape, adc_title).to_edge(LEFT, buff=1).shift(3.5*RIGHT)
+
+        # dma
+        dma_shape = Square(side_length=1.5, color=BLUE, fill_color=[PINK,GREEN], fill_opacity=.8)
+        dma_title = Text('DMA').scale(.5)
+        dma = VGroup(dma_shape, dma_title).to_edge(LEFT, buff=1).shift(6.5*RIGHT)
+
+        # cpu
+        cpu_shape = Square(side_length=1.5, color=BLUE, fill_color=[PURPLE,RED], fill_opacity=.8)
+        cpu_title = Text('CPU').scale(.5)
+        cpu = VGroup(cpu_shape, cpu_title).to_edge(DR, buff=1)
+
+        #sensor adc connection
+        sensor_to_adc_line = Line(
+            start = sensor_shape.get_center() + [sensor_shape.get_width()/2, 0, 0],
+            end=adc_shape.get_center() + [-adc_shape.get_width()/2, 0, 0], color=GREEN
+        )
+
+        #sensor signal
+        analog_signal_graph = ParametricFunction(
+            lambda t: [t, 0.5*np.sin(2*t), 0], t_range=[0, 2*np.pi], color=RED
+        ).scale([sensor_to_adc_line.get_length()/(2*np.pi), 1, 1])
+        analog_signal_graph.shift(sensor_to_adc_line.get_start()-analog_signal_graph.get_start())
+
+        # adc dma connection
+        adc_to_dma_line = Line(
+              start = adc_shape.get_center() + [adc_shape.get_width()/2, 0, 0],
+            end=dma_shape.get_center() + [-dma_shape.get_width()/2, 0, 0], color=BLUE_B
+        ).add_tip()
+
+        # cpu dma connection
+        dma_to_cpu_line = Line(
+              start = dma_shape.get_corner(RIGHT+DOWN),
+            end=cpu_shape.get_corner(LEFT+UP), color=GREEN
+        ).add_tip()
+
+        # animation related
+        def flash_line(line, speed, original_color=None, next_color=RED):
+            if original_color == None:
+                original_color = line.get_color()
+            self.play(line.animate.set_color(next_color), run_time=speed)
+            self.play(line.animate.set_color(original_color), run_time=speed)
+
+        def flash_adc():
+            self.play(adc_shape.animate.set_color(RED_B), run_time=.3)
+            self.play(adc_shape.animate.set_color(adc_color), run_time=.3)
+        
+        next_memory_location_to_write = 0
+        t = Text("cpu got interrupt").scale(.5).next_to(dma_to_cpu_line, UP, buff=.2).rotate(dma_to_cpu_line.get_angle())
+        def adc_to_dma_to_memory_animation(adc_dma_line, dma_mem_line,
+                                 speed=.1, original_color=None, next_color=RED):
+            flash_adc()
+            flash_line(line=adc_dma_line, speed=speed, original_color=original_color, next_color=next_color)
+            flash_line(line=dma_mem_line, speed=speed*1.5, original_color=original_color, next_color=next_color)
+            nonlocal next_memory_location_to_write
+            update_memory_location(next_memory_location_to_write, randint(0, 99))
+            next_memory_location_to_write += 1
+            if next_memory_location_to_write == dma_buffer_size:
+                flash_line(line=dma_to_cpu_line, speed=speed, original_color=original_color, next_color=next_color)
+                self.play(Write(t), run_time=.5)
+                self.play(FadeOut(t))
+            next_memory_location_to_write = next_memory_location_to_write % dma_buffer_size
+
+        def update_memory_location(index, value):
+            new_text = Text(str(value)).scale(.5).move_to(array_of_10[0][index][1].get_center())
+            self.play(Transform(array_of_10[0][index][1],new_text))
+
+        # array creation
+        def get_array(num_of_elements, length=10, color=GREEN, surrounding_color=BLUE):
+            width=length/(num_of_elements + num_of_elements/4)
+            squares_shape = VGroup(*[VGroup(Square(side_length=width, color=color), Text("xx", color=WHITE).scale(.5))
+                                     for _ in range(num_of_elements)]).arrange(RIGHT)
+            return VGroup(squares_shape, SurroundingRectangle(squares_shape, color=surrounding_color)).to_edge(UR)
+
+        array_of_10 = get_array(dma_buffer_size)
+
+        # dma memory connection
+        dma_to_memory_location_line = Line(
+            start = dma.get_center() + [0, dma.get_width()/2, 0],
+            end=array_of_10.get_center() + [0, -array_of_10.get_height()/2, 0],color=YELLOW
+        ).add_tip()
+
+        self.add(sensor, adc, sensor_to_adc_line, dma, adc_to_dma_line, array_of_10, dma_to_memory_location_line, cpu, dma_to_cpu_line, analog_signal_graph)
+        # self.play(Create(analog_signal_graph), rate_func=linear)
+        # self.wait()
+        # flash_line(adc_to_dma_line, .2)
+        for _ in range(dma_buffer_size*2):
+            adc_to_dma_to_memory_animation(adc_to_dma_line, dma_to_memory_location_line)
+
+        self.wait(2)
