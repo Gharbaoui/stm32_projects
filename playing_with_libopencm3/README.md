@@ -39,3 +39,8 @@ include $(OPENCM3_DIR)/mk/genlink-config.mk
 include ../rules.mk
 include $(OPENCM3_DIR)/mk/genlink-rules.mk
 ```
+
+### For Me
+1. clone it
+2. step into libopencm3 run make
+3. start working in the src directory
