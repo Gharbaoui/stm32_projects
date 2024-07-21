@@ -3,3 +3,9 @@ freertos_and_libopencm/*
 manim_stuff/*
 */pics/media/*
 for_later/*
+playing_with_libopencm3/tests/*
+playing_with_libopencm3/usart/*
+docs/*
+empty_bin/*
+my_approach.md
+.DS_Store

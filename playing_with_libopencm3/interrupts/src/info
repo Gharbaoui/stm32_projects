@@ -1,0 +1,5 @@
+---------start--------
+LDLIBS: -lopencm3_stm32f4
+LIBDEPS: ../libopencm3/lib/libopencm3_stm32f4.a
+LDFLAGS: -L../libopencm3/lib
+---------end--------

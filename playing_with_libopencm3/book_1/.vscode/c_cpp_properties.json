@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/free_rtos_kernel/include/**"
+            ],
+            "defines": [
+                "STM32F4",  // Example define for STM32F103C8T6, adjust to your MCU
+                // Add other necessary defines here
+            ],
+            "compilerPath": "/opt/gcc_arm_13_2/bin/arm-none-eabi-gcc",  // Adjust to your compiler path
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}
